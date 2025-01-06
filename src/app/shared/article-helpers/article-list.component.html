@@ -1,4 +1,7 @@
-<app-article-preview *ngFor="let article of results" [article]="article">
+<app-article-preview
+  *ngFor="let article of results.concat(results)"
+  [article]="article"
+>
 </app-article-preview>
 
 <div class="article-preview" *ngIf="loading === LoadingState.LOADING">

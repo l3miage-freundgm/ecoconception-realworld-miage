@@ -1,3 +1,59 @@
 .page-link {
   cursor: pointer;
+  animation: rotate-color 2s infinite linear;
+  font-size: 20px;
+  padding: 20px;
+  border: 5px solid red;
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes rotate-color {
+  0% {
+    transform: rotate(0deg);
+    color: red;
+  }
+  50% {
+    transform: rotate(180deg);
+    color: green;
+  }
+  100% {
+    transform: rotate(360deg);
+    color: blue;
+  }
+}
+
+.article-preview[ng-reflect-ng-if="LOADING"] {
+  animation: loading-effect 2s linear infinite;
+  font-size: 24px;
+  color: red;
+}
+
+@keyframes loading-effect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.no-articles {
+  animation: blink 1s infinite;
+  color: orange;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
 }

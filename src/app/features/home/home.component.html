@@ -5,7 +5,15 @@
       <p>A place to share your <i>Angular</i> knowledge.</p>
     </div>
   </div>
-
+  <div class="gif-container d-flex justify-content-center align-items-center">
+    <img src="assets/gifanime.gif" alt="Non pertinent 1" class="mx-2" />
+    <img src="assets/gifanime.gif" alt="Non pertinent 2" class="mx-2" />
+    <img src="assets/gifanime.gif" alt="Non pertinent 3" class="mx-2" />
+    <div class="image-container">
+      <img src="assets/selena4K.jpg" alt="Une image mal optimisée" />
+      <img src="assets/selena4K.jpg" alt="Une autre image mal optimisée" />
+    </div>
+  </div>
   <div class="container page">
     <div class="row">
       <div class="col-md-9">
@@ -54,6 +62,21 @@
             >
               {{ tag }}
             </a>
+            <a
+              class="tag-default tag-pill"
+              (click)="setListTo('all', { tag: 'random' })"
+              >Random</a
+            >
+            <a
+              class="tag-default tag-pill"
+              (click)="setListTo('all', { tag: 'extra' })"
+              >Extra</a
+            >
+            <a
+              class="tag-default tag-pill"
+              (click)="setListTo('all', { tag: 'overload' })"
+              >Overload</a
+            >
           </div>
 
           <div [hidden]="tagsLoaded">Loading tags...</div>

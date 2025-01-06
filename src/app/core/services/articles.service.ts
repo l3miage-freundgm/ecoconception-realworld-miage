@@ -12,7 +12,6 @@ export class ArticlesService {
   query(
     config: ArticleListConfig
   ): Observable<{ articles: Article[]; articlesCount: number }> {
-    // Convert any filters over to Angular's URLSearchParams
     let params = new HttpParams();
 
     Object.keys(config.filters).forEach((key) => {
@@ -20,16 +19,39 @@ export class ArticlesService {
       params = params.set(key, config.filters[key]);
     });
 
-    return this.http.get<{ articles: Article[]; articlesCount: number }>(
-      "/articles" + (config.type === "feed" ? "/feed" : ""),
-      { params }
+    // Requête principale
+    const mainRequest = this.http.get<{
+      articles: Article[];
+      articlesCount: number;
+    }>("/articles" + (config.type === "feed" ? "/feed" : ""), { params });
+
+    const redundantRequest1 = this.http.get("/articles");
+    const redundantRequest2 = this.http.get("/articles?limit=5");
+    const redundantRequest3 = this.http.get("/articles?limit=10");
+
+    return mainRequest.pipe(
+      map((data) => {
+        redundantRequest1.subscribe();
+        redundantRequest2.subscribe();
+        redundantRequest3.subscribe();
+        return data;
+      })
     );
   }
 
   get(slug: string): Observable<Article> {
-    return this.http
-      .get<{ article: Article }>(`/articles/${slug}`)
-      .pipe(map((data) => data.article));
+    return this.http.get<{ article: Article }>(`/articles/${slug}`).pipe(
+      map((data) => {
+        localStorage.setItem(`article-${slug}`, JSON.stringify(data.article));
+
+        sessionStorage.setItem(
+          `article-backup-${slug}`,
+          JSON.stringify(data.article)
+        );
+
+        return data.article;
+      })
+    );
   }
 
   delete(slug: string): Observable<void> {
@@ -53,7 +75,13 @@ export class ArticlesService {
   favorite(slug: string): Observable<Article> {
     return this.http
       .post<{ article: Article }>(`/articles/${slug}/favorite`, {})
-      .pipe(map((data) => data.article));
+      .pipe(
+        map((data) => {
+          this.http.get(`/articles/${slug}`).subscribe();
+          this.http.get(`/articles`).subscribe();
+          return data.article;
+        })
+      );
   }
 
   unfavorite(slug: string): Observable<void> {
