@@ -19,24 +19,25 @@ export class ArticlesService {
       params = params.set(key, config.filters[key]);
     });
 
-    // Requête principale
-    const mainRequest = this.http.get<{
-      articles: Article[];
-      articlesCount: number;
-    }>("/articles" + (config.type === "feed" ? "/feed" : ""), { params });
+    return this.http
+      .get<{ articles: Article[]; articlesCount: number }>(
+        "/articles" + (config.type === "feed" ? "/feed" : ""),
+        { params }
+      )
+      .pipe(
+        map((data) => {
+          localStorage.setItem("all-articles", JSON.stringify(data.articles));
 
-    const redundantRequest1 = this.http.get("/articles");
-    const redundantRequest2 = this.http.get("/articles?limit=5");
-    const redundantRequest3 = this.http.get("/articles?limit=10");
+          sessionStorage.setItem(
+            "backup-articles",
+            JSON.stringify(data.articles)
+          );
 
-    return mainRequest.pipe(
-      map((data) => {
-        redundantRequest1.subscribe();
-        redundantRequest2.subscribe();
-        redundantRequest3.subscribe();
-        return data;
-      })
-    );
+          localStorage.setItem("articles-timestamp", new Date().toISOString());
+
+          return data;
+        })
+      );
   }
 
   get(slug: string): Observable<Article> {
