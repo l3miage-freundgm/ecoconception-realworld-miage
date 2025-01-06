@@ -12,9 +12,6 @@
     "lhci:mobile": "lhci autorun",
     "lhci:desktop": "lhci autorun --collect.settings.preset=desktop"
   },
-  "engines": {
-    "node": "^14.20.0 || ^16.13.0 || ^18.10.0"
-  },
   "private": true,
   "dependencies": {
     "@angular/animations": "16.2.11",
